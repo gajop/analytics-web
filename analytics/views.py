@@ -112,10 +112,11 @@ def index(request):
     for dt in dates:
         days.setdefault(dt.toordinal(), []).append(dt)
     dates = []
-    for day in range(min(days), max(days)+1):
-        date = dt.fromordinal(day)
-        numPlayers = len(days.get(day, []))
-        dates.append((date.strftime("%d/%m/%y"), numPlayers))
-    print(dates)
+    if len(days) > 0:
+        for day in range(min(days), max(days)+1):
+            date = dt.fromordinal(day)
+            numPlayers = len(days.get(day, []))
+            dates.append((date.strftime("%d/%m/%y"), numPlayers))
+        print(dates)
     context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates}
     return render(request, 'index.html', context)
