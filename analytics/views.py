@@ -81,12 +81,10 @@ def index(request):
         if startTime and endTime:
             playLength = endTime - startTime
             playLengths.append(playLength.total_seconds())
-    print(len(gameInstances), len(playLengths))
   
     playLengthBuckets = []
     if len(playLengths) > 0:
         playLengths = sorted(playLengths)
-        print(playLengths)
         buckets = [("<10s", 10), ("10s-20s", 20), ("20s-1min", 60), ("1min-2min", 120), ("2min-5min", 300), ("5min-10min", 600), ("10min+", float("inf"))]
         bucketNums = [0] * len(buckets)
         for playLength in playLengths:
@@ -103,11 +101,9 @@ def index(request):
             #bucketLengths = playLengths[int(i * bucketSize) : int((i + 1) * bucketSize)]
             #rangeStr = str(bucketLengths[0]) + "s - " + str(bucketLengths[-1]) + "s"
             #playLengthBuckets.append((rangeStr, len(bucketLengths)))
-    print(playLengthBuckets)
     
     dateBuckets = []
     dates = GameInstance.objects.values_list("started_date", flat=True)
-    print(dates)
     dates = sorted(dates)
     days = {}
     for dt in dates:
@@ -118,6 +114,5 @@ def index(request):
             date = dt.fromordinal(day)
             numPlayers = len(days.get(day, []))
             dates.append((date.strftime("%d/%m/%y"), numPlayers))
-        print(dates)
     context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates}
     return render(request, 'index.html', context)
