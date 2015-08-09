@@ -53,14 +53,15 @@ def closeSession(request, sessionID):
 def registerEvent(request, event):
     try:
         name = event["name"]
-        value = event.get("value")
+        value_str = event.get("value_str")
+        value_float = event.get("value_float")
         game_instance_id = event["session_id"]
     except KeyError as k:
         raise Exception("Missing required parameter: " + k.message)
     game_instance = GameInstance.objects.filter(pk=game_instance_id).first()
     if game_instance is None:
         raise Exception("No session with id = " + str(game_instance_id) + ". Did you forget to call openSession(...)?")
-    event = Event(name=name, value=value, game_instance=game_instance)
+    event = Event(name=name, value_str=value_str, value_float=value_float, game_instance=game_instance)
     event.save()
     return True
 

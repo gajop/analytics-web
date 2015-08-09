@@ -35,5 +35,6 @@ class Event(models.Model):
 
     # custom fields
     name = models.CharField(max_length=200)
-    value = models.CharField(max_length=500, null=True, blank=True) 
+    value_str   = models.CharField(max_length=500, null=True, blank=True)
+    value_float = models.FloatField(null=True, blank=True)
     # TODO: use something like attribute/value store instead
