@@ -120,5 +120,7 @@ def index(request):
             date = dt.fromordinal(day)
             numPlayers = len(days.get(day, []))
             dates.append((date.strftime("%d/%m/%y"), numPlayers))
-    context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates}
+
+    topScores = Event.objects.filter(name__exact="score").order_by('-value_float')[:10]
+    context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates, "topScores":topScores}
     return render(request, 'index.html', context)
