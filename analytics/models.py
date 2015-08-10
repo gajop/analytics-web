@@ -31,7 +31,7 @@ class GameInstance(models.Model):
 
 class Event(models.Model):
     game_instance = models.ForeignKey("GameInstance")
-    upload_date = models.DateTimeField(auto_now_add=True, blank=True)
+    upload_date = models.DateTimeField()
 
     # custom fields
     name = models.CharField(max_length=200)

@@ -1,4 +1,5 @@
 from django.utils import timezone
+from datetime import timedelta
 
 from django.shortcuts import render
 
@@ -56,12 +57,17 @@ def registerEvent(request, event):
         value_str = event.get("value_str")
         value_float = event.get("value_float")
         game_instance_id = event["session_id"]
+        time = event.get("time")
     except KeyError as k:
         raise Exception("Missing required parameter: " + k.message)
     game_instance = GameInstance.objects.filter(pk=game_instance_id).first()
     if game_instance is None:
         raise Exception("No session with id = " + str(game_instance_id) + ". Did you forget to call openSession(...)?")
-    event = Event(name=name, value_str=value_str, value_float=value_float, game_instance=game_instance)
+    if time is not None:
+        upload_date = game_instance.started_date + timedelta(seconds=time)
+    else:
+        upload_date = timezone.now()
+    event = Event(name=name, value_str=value_str, value_float=value_float, game_instance=game_instance, upload_date=upload_date)
     event.save()
     return True
 
