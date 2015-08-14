@@ -134,6 +134,8 @@ def index(request):
             filter(game_instance__exact=topScore.game_instance).\
             filter(upload_date__gt=topScore.upload_date).\
             order_by('upload_date').first()
+        if not startEvent or not endEvent:
+            continue
         playerName = Event.objects.filter(name__exact="player_name").\
             filter(game_instance__exact=topScore.game_instance).\
             filter(upload_date__lt=endEvent.upload_date).\
