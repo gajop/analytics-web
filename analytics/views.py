@@ -140,8 +140,10 @@ def index(request):
             filter(game_instance__exact=topScore.game_instance).\
             filter(upload_date__lt=endEvent.upload_date).\
             filter(upload_date__gt=startEvent.upload_date).first()
-        if playerName is not None and playerName.value_str and playerName.value_str not in topPlayers:
-            topPlayers[playerName.value_str] = topScore.value_float
+        if playerName is not None and playerName.value_str:
+            if playerName.value_str not in topPlayers or \
+               topPlayers[playerName.value_str] < topScore.value_float:
+                topPlayers[playerName.value_str] = topScore.value_float
         if len(topPlayers) > TOP_AMOUNT:
             break
     topScores = [ (k, v) for k, v in topPlayers.iteritems() ]
