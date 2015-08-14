@@ -134,12 +134,15 @@ def index(request):
             filter(game_instance__exact=topScore.game_instance).\
             filter(upload_date__gt=topScore.upload_date).\
             order_by('upload_date').first()
-        if not startEvent or not endEvent:
-            continue
+
         playerName = Event.objects.filter(name__exact="player_name").\
-            filter(game_instance__exact=topScore.game_instance).\
-            filter(upload_date__lt=endEvent.upload_date).\
-            filter(upload_date__gt=startEvent.upload_date).first()
+                     filter(game_instance__exact=topScore.game_instance)
+        # FIXME: startEvent/endEvent shouldn't be missing.. diagnoze why it is sometimes
+        if startEvent is not None:
+            playerName = playerName.filter(upload_date__gt=startEvent.upload_date)
+        if endEvent is not None:
+            playerName = playerName.filter(upload_date__lt=endEvent.upload_date)
+        playerName = playerName.first()
         if playerName is not None and playerName.value_str:
             if playerName.value_str not in topPlayers or \
                topPlayers[playerName.value_str] < topScore.value_float:
