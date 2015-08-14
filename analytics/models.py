@@ -15,6 +15,8 @@ class Engine(models.Model):
 class Map(models.Model):
     map_name = models.CharField(max_length=200, unique=True)
 
+#class SessionInstance(models.Model):
+
 class GameInstance(models.Model):
     # game static
     game = models.ForeignKey('Game')

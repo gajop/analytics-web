@@ -121,6 +121,29 @@ def index(request):
             numPlayers = len(days.get(day, []))
             dates.append((date.strftime("%d/%m/%y"), numPlayers))
 
-    topScores = Event.objects.filter(name__exact="score").order_by('-value_float')[:10]
+    topScores = Event.objects.filter(name__exact="score").order_by('-value_float')
+    # TODO: this is slow, we'll probably need a separate table for a single game so these queries aren't needed (or are at least combined)
+    TOP_AMOUNT = 10
+    topPlayers = {}
+    for topScore in topScores:
+        startEvent = Event.objects.filter(name__exact="game_start").\
+            filter(game_instance__exact=topScore.game_instance).\
+            filter(upload_date__lt=topScore.upload_date).\
+            order_by('-upload_date').first()
+        endEvent = Event.objects.filter(name__exact="game_end").\
+            filter(game_instance__exact=topScore.game_instance).\
+            filter(upload_date__gt=topScore.upload_date).\
+            order_by('upload_date').first()
+        playerName = Event.objects.filter(name__exact="player_name").\
+            filter(game_instance__exact=topScore.game_instance).\
+            filter(upload_date__lt=endEvent.upload_date).\
+            filter(upload_date__gt=startEvent.upload_date).first()
+        if playerName is not None and playerName.value_str and playerName.value_str not in topPlayers:
+            topPlayers[playerName.value_str] = topScore.value_float
+        if len(topPlayers) > TOP_AMOUNT:
+            break
+    topScores = [ (k, v) for k, v in topPlayers.iteritems() ]
+    topScores = sorted(topScores, key=lambda topScore: -topScore[1])
+
     context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates, "topScores":topScores}
     return render(request, 'index.html', context)
