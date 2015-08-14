@@ -121,6 +121,10 @@ def index(request):
             numPlayers = len(days.get(day, []))
             dates.append((date.strftime("%d/%m/%y"), numPlayers))
 
+    context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates}
+    return render(request, 'index.html', context)
+
+def highscore(request):
     topScores = Event.objects.filter(name__exact="score").order_by('-value_float')
     # TODO: this is slow, we'll probably need a separate table for a single game so these queries aren't needed (or are at least combined)
     TOP_AMOUNT = 10
@@ -151,6 +155,6 @@ def index(request):
             break
     topScores = [ (k, v) for k, v in topPlayers.iteritems() ]
     topScores = sorted(topScores, key=lambda topScore: -topScore[1])
-
-    context = {"playLengthBuckets":playLengthBuckets, "dayActivities":dates, "topScores":topScores}
-    return render(request, 'index.html', context)
+    
+    context = {"topScores":topScores}
+    return render(request, 'highscore.html', context)

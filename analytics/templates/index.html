@@ -1,19 +1,8 @@
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+{% extends "base.html" %}
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="http://code.highcharts.com/highcharts.js"></script>
-
-<div class="row">
-<div id="container" ></div>
-<div id="container2" ></div>
+{% block content %}
+<div id="container" class="col-md-offset-3 col-md-6"> ></div>
+<div id="container2" class="col-md-offset-3 col-md-6"> ></div>
 <script>
 $(function () { 
     var xAxis = [];
@@ -90,25 +79,4 @@ $(function () {
     });
 });
 </script>
-<div align="center" class="col-md-offset-3 col-md-6">
-<h2>Highscores</h2>
-<table class="table table-striped">
-  <thead>
-    <tr>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Score</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for topScore in topScores %}
-    <tr>
-        <td>{{ forloop.counter }}.</td>
-        <td>{{ topScore.0 }}</td>
-        <td>{{ topScore.1 }}</td>
-    </tr>
-    {%endfor%}
-  </tbody>
-</table>
-</div>
-</div>
+{% endblock content %}

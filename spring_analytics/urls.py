@@ -21,6 +21,7 @@ from analytics import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^highscore$', views.highscore, name='highscore'),
     url(r'^json/$', jsonrpc_site.dispatch, name='jsonrpc_mountpoint'),
     url(r'^json/browse/$', 'jsonrpc.views.browse', name='jsonrpc_browser'),
     url(r'^admin/', include(admin.site.urls)),
